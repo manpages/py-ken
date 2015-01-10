@@ -2,22 +2,23 @@ from pprint import pprint
 import sys
 sys.path.append('.')
 from reader import read
+from validator import isSolved
 
 def parseField(input):
   return dict( { 'cells': parseCells(input),
                  'cages': parseCages(input),
-                 'assertions': parseAssertions(input) })
+               })
 
 ##########################################################################
 
 def parseCages(input):
-  inputList = input.split('\n\n')
-  return parseOperations( parseCagesMap(inputList[0]),
-                          inputList[1])
+  inputList  = input.split('\n\n')
+  return parseAssertions( parseOperations( parseCagesMap( inputList[0] ),
+                                                          inputList[1] ),
+                                                          inputList[2] )
 
-def parseAssertions(input):
-  inputList = input.split('\n\n')
-  return parseAssertionsDo(inputList[2].split('\n'), {})
+def parseAssertions(acc, input):
+  return parseAssertionsDo(input.split('\n'), acc)
 def parseAssertionsDo(assertions, acc):
   if len(assertions) == 0:
     return acc
@@ -26,7 +27,8 @@ def parseAssertionsDo(assertions, acc):
   x = assertionDefinition[0]
   y = assertionDefinition[1]
   v = assertionDefinition[2]
-  acc[(x, y)] = v
+  if x != '-':
+    acc[x + ':' + y] = { 'cells': [(int(x), int(y))], 'op': '+', 'targetValue': int(v) }
   return parseAssertionsDo(tail, acc)
 
 def parseCagesMap(mapBlock):
@@ -100,7 +102,20 @@ if __name__ == '__main__':
   trivialExtraWhitespacesMap = read('./maps/3x3-trivial-extra-whitespaces.map')
   trivialNoSolution = read('./maps/3x3-trivial-no-solution.map')
   trivialAssertionConstraint = read('./maps/3x3-trivial-assertion-constraint.txt')
+  wrong = read('./maps/3x3-trivial-assertion-constraint-wrong.txt')
   #pprint(parseCells(trivialExtraWhitespacesMap))
   #pprint(parseCells(trivialNoSolution))
+
   pprint(parseField(trivialExtraWhitespacesMap))
-  pprint(parseField(trivialAssertionConstraint))
+  pprint('=============')
+
+  tcm = parseField(trivialAssertionConstraint)
+
+  pprint(tcm)
+  pprint(isSolved(tcm))
+  pprint('=============')
+
+  wcm = parseField(wrong)
+  pprint(wcm)
+  pprint(isSolved(wcm))
+  pprint('=============')
