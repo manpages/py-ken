@@ -2,43 +2,73 @@ import functools
 from itertools import permutations
 from pprint import pprint
 import sys
+from math import sqrt
 sys.path.append('.')
 
 def isSolved(game):
+  pprint(game)
   for v in game['cages']:
     cage = game['cages'][v]
-    if not isSolvedCage(cage, game):
+    if not isSolvedCage(cage, game['cells']):
+      return False
+  for i in range(0, game['dimension']):
+    if not rowComplies(game['cells'], game['dimension'], i):
+      return False
+    if not colComplies(game['cells'], game['dimension'], i):
       return False
   return True
 
 ##########################################################################
 
-def isSolvedCage(v, game):
-  pprint('Testing')
-  pprint(v)
-  targetValue = int(v['targetValue'])
-  pprint(targetValue)
-  if isCommutative(v['op']):
-    pprint('Under commutative operation')
-    return myReduce(v['cells'], game, opToFunction(v['op'])) == targetValue
-  else:
-    pprint('Under non-commutative operation')
-    return targetValue in transposeReduce(v['cells'], game, opToFunction(v['op']))
+def rowComplies(gameCells, n, y):
+  rowValues = getRowValues(gameCells, y)
+  pprint({ 'Testing row ' + str(y): rowValues})
+  for i in range(1, n):
+    if i not in rowValues:
+      return False
+  return True
 
-def myReduce(cells, game, f):
-  cellValues = getCellValues(cells, game['cells'])
-  pprint(cellValues)
+def colComplies(gameCells, n, x):
+  pprint('Testing col ' + str(x))
+  colValues = getColValues(gameCells, x)
+  for i in range(1, n):
+    if i not in colValues:
+      return False
+  return True
+
+def isSolvedCage(cage, gameCells):
+  pprint({ 'TestingCage': cage })
+  targetValue = int(cage['targetValue'])
+  if isCommutative(cage['op']):
+    return myReduce(cage['cells'], gameCells, opToFunction(cage['op'])) == targetValue
+  else:
+    return targetValue in transposeReduce(cage['cells'], gameCells, opToFunction(cage['op']))
+
+def myReduce(cageCellAddresses, gameCells, f):
+  cellValues = getCellValues(cageCellAddresses, gameCells)
   return functools.reduce(f, cellValues)
 
-def transposeReduce(cells, game, f):
-  cellValuesPerm = permutations(getCellValues(cells, game['cells']))
+def transposeReduce(cageCellAddresses, gameCells, f):
+  cellValuesPerm = permutations(getCellValues(cageCellAddresses, gameCells))
   return map(lambda x: functools.reduce(f, x), cellValuesPerm)
 
-def getCellValues(cells, gameCells):
+def getCellValues(cageCellAddresses, gameCells):
   cellValues = []
-  for (x,y) in cells:
+  for (x,y) in cageCellAddresses:
     cellValues.append(int(gameCells[(x,y)]))
   return cellValues
+
+def getColValues(gameCells, x):
+  result = []
+  for (cX,cY) in gameCells:
+    if cX == x: result.append(gameCells[(cX, cY)])
+  return result
+
+def getRowValues(gameCells, y):
+  result = []
+  for (cX,cY) in gameCells:
+    if cY == y: result.append(gameCells[(cX, cY)])
+  return result
 
 def isCommutative(x):
   if x == '+' or x == '*':

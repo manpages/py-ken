@@ -5,8 +5,9 @@ from reader import read
 from validator import isSolved
 
 def parseField(input):
-  return dict( { 'cells': parseCells(input),
-                 'cages': parseCages(input),
+  return dict( { 'cells':      parseCells(input),
+                 'cages':      parseCages(input),
+                 'dimension':  dimension(input)
                })
 
 ##########################################################################
@@ -34,7 +35,7 @@ def parseAssertionsDo(assertions, acc):
 def parseCagesMap(mapBlock):
   mapBlock1 = mapBlock.split('\n')
   mapBlock1.reverse()
-  return parseCagesMapDo(mapBlock1, getWidth(mapBlock), {})
+  return parseCagesMapDo(mapBlock1, dimension(mapBlock), {})
 def parseCagesMapDo(lines, n, acc):
   if n == 0:
     return acc
@@ -64,9 +65,9 @@ def parseCells(input):
   if solutionMaybe:
     return solutionMaybe
   else:
-    return latinSquare(getWidth(input))
+    return latinSquare(dimension(input))
 
-def getWidth(input):
+def dimension(input):
   return len(input.split('\n')[0])
 
 def solution(input):
@@ -81,7 +82,7 @@ def solutionDo(solutionBlock, y, acc):
     return acc
   (head, tail) = (solutionBlock[0], solutionBlock[1:])
   for x in range(0, len(head)):
-    acc[(x,y)] = head[x]
+    acc[(x,y)] = int(head[x])
   return solutionDo(tail, y + 1, acc)
 
 def latinSquare(n):
