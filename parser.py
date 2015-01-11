@@ -57,7 +57,7 @@ def parseOperationsDo(ops, acc):
   op              = operationDefinition[1]
   targetValue     = operationDefinition[2]
   acc[cageId]['op']          = op
-  acc[cageId]['targetValue'] = targetValue
+  acc[cageId]['targetValue'] = int(targetValue)
   return parseOperationsDo(tail, acc)
 
 def parseCells(input):
@@ -100,6 +100,8 @@ def shiftDo(xs):
   return xs[1:] + [xs[0]]
 
 if __name__ == '__main__':
+  from solver import solve
+
   trivialExtraWhitespacesMap = read('./maps/3x3-trivial-extra-whitespaces.map')
   trivialNoSolution = read('./maps/3x3-trivial-no-solution.map')
   trivialAssertionConstraint = read('./maps/3x3-trivial-assertion-constraint.txt')
@@ -107,16 +109,21 @@ if __name__ == '__main__':
   #pprint(parseCells(trivialExtraWhitespacesMap))
   #pprint(parseCells(trivialNoSolution))
 
-  pprint(parseField(trivialExtraWhitespacesMap))
-  pprint('=============')
+  #pprint(parseField(trivialExtraWhitespacesMap))
+  #pprint('=============')
 
-  tcm = parseField(trivialAssertionConstraint)
+  #tcm = parseField(trivialAssertionConstraint)
 
-  pprint(tcm)
-  pprint(isSolved(tcm))
-  pprint('=============')
+  #pprint(tcm)
+  #pprint(isSolved(tcm))
+  #pprint('=============')
 
-  wcm = parseField(wrong)
-  pprint(wcm)
-  pprint(isSolved(wcm))
-  pprint('=============')
+  #wcm = parseField(wrong)
+  #pprint(wcm)
+  #pprint(isSolved(wcm))
+  #pprint('=============')
+  
+  game = parseField(trivialNoSolution)
+  pprint(game)
+  game1 = solve(game)
+  #pprint(isSolved(game1))

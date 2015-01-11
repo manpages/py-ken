@@ -42,32 +42,37 @@ def isSolvedCage(cage, gameCells):
   if isCommutative(cage['op']):
     return myReduce(cage['cells'], gameCells, opToFunction(cage['op'])) == targetValue
   else:
-    return targetValue in transposeReduce(cage['cells'], gameCells, opToFunction(cage['op']))
+    return targetValue in permuteReduce(cage['cells'], gameCells, opToFunction(cage['op']))
 
 def myReduce(cageCellAddresses, gameCells, f):
   cellValues = getCellValues(cageCellAddresses, gameCells)
-  return functools.reduce(f, cellValues)
+  return functools.reduce(f, cellValues, 0)
 
-def transposeReduce(cageCellAddresses, gameCells, f):
+def permuteReduce(cageCellAddresses, gameCells, f):
   cellValuesPerm = permutations(getCellValues(cageCellAddresses, gameCells))
-  return map(lambda x: functools.reduce(f, x), cellValuesPerm)
+  return map(lambda x: functools.reduce(f, x), cellValuesPerm, 0)
 
 def getCellValues(cageCellAddresses, gameCells):
   cellValues = []
   for (x,y) in cageCellAddresses:
-    cellValues.append(int(gameCells[(x,y)]))
+    if type(gameCells[(x,y)]) is int:
+      cellValues.append(gameCells[(x,y)])
   return cellValues
 
 def getColValues(gameCells, x):
   result = []
   for (cX,cY) in gameCells:
-    if cX == x: result.append(gameCells[(cX, cY)])
+    if cX == x:
+      if type(gameCells[(cX,cY)]) is int:
+        result.append(gameCells[(cX, cY)])
   return result
 
 def getRowValues(gameCells, y):
   result = []
   for (cX,cY) in gameCells:
-    if cY == y: result.append(gameCells[(cX, cY)])
+    if cY == y:
+      if type(gameCells[(cX,cY)]) is int:
+        result.append(gameCells[(cX, cY)])
   return result
 
 def isCommutative(x):
