@@ -6,9 +6,10 @@ from math import sqrt
 sys.path.append('.')
 
 def isSolved(game):
-  pprint(game)
+  #pprint(game)
   for v in game['cages']:
     cage = game['cages'][v]
+    #pprint('Testing cage ' + v)
     if not isSolvedCage(cage, game['cells']):
       return False
   for i in range(0, game['dimension']):
@@ -22,14 +23,14 @@ def isSolved(game):
 
 def rowComplies(gameCells, n, y):
   rowValues = getRowValues(gameCells, y)
-  pprint({ 'Testing row ' + str(y): rowValues})
+  #pprint({ 'Testing row ' + str(y): rowValues})
   for i in range(1, n):
     if i not in rowValues:
       return False
   return True
 
 def colComplies(gameCells, n, x):
-  pprint('Testing col ' + str(x))
+  #pprint('Testing col ' + str(x))
   colValues = getColValues(gameCells, x)
   for i in range(1, n):
     if i not in colValues:
@@ -50,7 +51,8 @@ def myReduce(cageCellAddresses, gameCells, f):
 
 def permuteReduce(cageCellAddresses, gameCells, f):
   cellValuesPerm = permutations(getCellValues(cageCellAddresses, gameCells))
-  return map(lambda x: functools.reduce(f, x), cellValuesPerm, 0)
+  pprint(cellValuesPerm)
+  return map(lambda x: functools.reduce(f, x), cellValuesPerm)
 
 def getCellValues(cageCellAddresses, gameCells):
   cellValues = []
