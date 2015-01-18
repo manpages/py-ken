@@ -3,6 +3,7 @@ import sys
 sys.path.append('.')
 from reader import read
 from validator import isSolved
+from simpleSolver import solve
 
 def parseField(input):
   return dict( { 'cells':      parseCells(input),
@@ -100,7 +101,6 @@ def shiftDo(xs):
   return xs[1:] + [xs[0]]
 
 if __name__ == '__main__':
-  from solver import solve
 
   trivialExtraWhitespacesMap = read('./maps/3x3-trivial-extra-whitespaces.map')
   trivialNoSolution = read('./maps/3x3-trivial-no-solution.map')
@@ -109,7 +109,7 @@ if __name__ == '__main__':
   #pprint(parseCells(trivialExtraWhitespacesMap))
   #pprint(parseCells(trivialNoSolution))
 
-  #pprint(parseField(trivialExtraWhitespacesMap))
+  pprint(isSolved(parseField(trivialExtraWhitespacesMap)))
   #pprint('=============')
 
   #tcm = parseField(trivialAssertionConstraint)
@@ -124,6 +124,7 @@ if __name__ == '__main__':
   #pprint('=============')
   
   game = parseField(trivialNoSolution)
-  pprint(game)
-  game1 = solve(game)
+  #pprint(game)
+  #game1 = solve(game)
+  #pprint(game1)
   #pprint(isSolved(game1))
