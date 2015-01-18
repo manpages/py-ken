@@ -14,8 +14,6 @@ def tryNext(game, candidates, leftmostEmpty):
     return False
   (head, tail) = (candidates[0], candidates[1:])
   game['cells'][leftmostEmpty] = head
-  #pprint({'candidates': candidates, 'left': leftmostEmpty, 'game': game})
-  pprint(leftmostEmpty)
   if contradicts(game):
     game['cells'][leftmostEmpty] = None
     return tryNext(game, tail, leftmostEmpty)

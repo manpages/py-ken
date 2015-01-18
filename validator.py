@@ -6,10 +6,8 @@ from math import sqrt
 sys.path.append('.')
 
 def isSolved(game):
-  #pprint(game)
   for v in game['cages']:
     cage = game['cages'][v]
-    #pprint('Testing cage ' + v)
     if not isSolvedCage(cage, game['cells']):
       return False
   for i in range(0, game['dimension']):
@@ -23,14 +21,12 @@ def isSolved(game):
 
 def rowComplies(gameCells, n, y):
   rowValues = getRowValues(gameCells, y)
-  #pprint({ 'Testing row ' + str(y): rowValues})
   for i in range(1, n):
     if i not in rowValues:
       return False
   return True
 
 def colComplies(gameCells, n, x):
-  #pprint('Testing col ' + str(x))
   colValues = getColValues(gameCells, x)
   for i in range(1, n):
     if i not in colValues:
@@ -38,21 +34,27 @@ def colComplies(gameCells, n, x):
   return True
 
 def isSolvedCage(cage, gameCells):
-  pprint({ 'TestingCage': cage })
   targetValue = int(cage['targetValue'])
+  f = opToFunction(cage['op'])
   if isCommutative(cage['op']):
-    return myReduce(cage['cells'], gameCells, opToFunction(cage['op'])) == targetValue
+    return myReduce(cage['cells'], gameCells, f) == targetValue
   else:
-    return targetValue in permuteReduce(cage['cells'], gameCells, opToFunction(cage['op']))
+    return targetValue in permuteReduce(cage['cells'], gameCells, f)
 
 def myReduce(cageCellAddresses, gameCells, f):
   cellValues = getCellValues(cageCellAddresses, gameCells)
-  return functools.reduce(f, cellValues, 0)
+  if (len(cellValues) == 0):
+    return []
+  return functools.reduce(f, cellValues[1:], cellValues[0])
 
 def permuteReduce(cageCellAddresses, gameCells, f):
+  def reductor(tup):
+    xs = list(tup)
+    if (len(xs) == 0):
+      return []
+    return functools.reduce(f, xs[1:], xs[0])
   cellValuesPerm = permutations(getCellValues(cageCellAddresses, gameCells))
-  pprint(cellValuesPerm)
-  return map(lambda x: functools.reduce(f, x), cellValuesPerm)
+  return list(map(reductor, cellValuesPerm))
 
 def getCellValues(cageCellAddresses, gameCells):
   cellValues = []
@@ -82,6 +84,9 @@ def isCommutative(x):
     return True
   else:
     return False
+
+def opToFunctionAndAcc0(x):
+  return (opToFunction(x), opToAcc0(x))
 
 def opToFunction(x):
   if x == '+': return lambda a,b: a + b

@@ -109,7 +109,6 @@ if __name__ == '__main__':
   #pprint(parseCells(trivialExtraWhitespacesMap))
   #pprint(parseCells(trivialNoSolution))
 
-  pprint(isSolved(parseField(trivialExtraWhitespacesMap)))
   #pprint('=============')
 
   #tcm = parseField(trivialAssertionConstraint)
@@ -124,7 +123,6 @@ if __name__ == '__main__':
   #pprint('=============')
   
   game = parseField(trivialNoSolution)
-  #pprint(game)
-  #game1 = solve(game)
-  #pprint(game1)
-  #pprint(isSolved(game1))
+  game1 = solve(game)
+  pprint(game1)
+  pprint(isSolved(game1))
