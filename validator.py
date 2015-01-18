@@ -85,9 +85,6 @@ def isCommutative(x):
   else:
     return False
 
-def opToFunctionAndAcc0(x):
-  return (opToFunction(x), opToAcc0(x))
-
 def opToFunction(x):
   if x == '+': return lambda a,b: a + b
   if x == '*': return lambda a,b: a * b
