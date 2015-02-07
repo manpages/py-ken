@@ -12,10 +12,8 @@ def solveDo(game, xss):
   if isSolved(solutionMaybe):
     return solutionMaybe
   if contradicts(solutionMaybe):
-    pprint({'status': 'contradicts', 'game': game, 'xss': xss})
     return solveDo(game, removeCandidate(xss))
   else:
-    pprint({'status': 'deeper', 'game': game, 'xss': xss})
     return solveDo(game, addCandidates(xss, game))
 
 def removeCandidate(xss):
