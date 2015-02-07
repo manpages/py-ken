@@ -15,9 +15,8 @@ def parseField(input):
 
 def parseCages(input):
   inputList  = input.split('\n\n')
-  return parseAssertions( parseOperations( parseCagesMap( inputList[0] ),
-                                                          inputList[1] ),
-                                                          inputList[2] )
+  return parseOperations( parseCagesMap( inputList[0] ),
+                                         inputList[1] )
 
 def parseAssertions(acc, input):
   return parseAssertionsDo(input.split('\n'), acc)
@@ -101,28 +100,8 @@ def shiftDo(xs):
   return xs[1:] + [xs[0]]
 
 if __name__ == '__main__':
-
-  trivialExtraWhitespacesMap = read('./maps/3x3-trivial-extra-whitespaces.map')
-  trivialNoSolution = read('./maps/3x3-trivial-no-solution.map')
-  trivialAssertionConstraint = read('./maps/3x3-trivial-assertion-constraint.txt')
-  wrong = read('./maps/3x3-trivial-assertion-constraint-wrong.txt')
-  #pprint(parseCells(trivialExtraWhitespacesMap))
-  #pprint(parseCells(trivialNoSolution))
-
-  #pprint('=============')
-
-  #tcm = parseField(trivialAssertionConstraint)
-
-  #pprint(tcm)
-  #pprint(isSolved(tcm))
-  #pprint('=============')
-
-  #wcm = parseField(wrong)
-  #pprint(wcm)
-  #pprint(isSolved(wcm))
-  #pprint('=============')
-  
-  game = parseField(trivialNoSolution)
-  game1 = solve(game)
-  pprint(game1)
-  pprint(isSolved(game1))
+  parsed = parseField(read(sys.argv[1]))
+  pprint(parsed)
+  solved = solve(parsed)
+  pprint(solved)
+  pprint(isSolved(solved))

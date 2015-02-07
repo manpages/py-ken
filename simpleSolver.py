@@ -5,21 +5,39 @@ from pprint import pprint
 from validator import isSolved, getColValues, getRowValues, getCellValues, isSolvedCage
 
 def solve(game):
-  return tryNext(annul(game), candidates0(game), (0,0))
+  return solveDo(game, [candidates0(game)])
 
-def tryNext(game, candidates, leftmostEmpty):
-  if isSolved(game):
-    return game
-  if len(candidates) == 0:
-    return False
-  (head, tail) = (candidates[0], candidates[1:])
-  game['cells'][leftmostEmpty] = head
-  if contradicts(game):
-    game['cells'][leftmostEmpty] = None
-    return tryNext(game, tail, leftmostEmpty)
+def solveDo(game, xss):
+  solutionMaybe = xss2game(xss, game)
+  if isSolved(solutionMaybe):
+    return solutionMaybe
+  if contradicts(solutionMaybe):
+    pprint({'status': 'contradicts', 'game': game, 'xss': xss})
+    return solveDo(game, removeCandidate(xss))
   else:
-    return tryNext(game, candidates0(game), next(leftmostEmpty, game['dimension']))  
-    
+    pprint({'status': 'deeper', 'game': game, 'xss': xss})
+    return solveDo(game, addCandidates(xss, game))
+
+def removeCandidate(xss):
+  xss[-1].pop(0)
+  if len(xss[-1]) == 0:
+    return removeCandidate(xss[:-1])
+  return xss
+
+def addCandidates(xss, game):
+  xss.append(candidates0(game))
+  return xss
+
+def xss2game(xss, game):
+  def n2xy(n):
+    return divmod(n - 1, game['dimension'])
+  game = annul(game)
+  i = 1
+  for xs in xss:
+    game['cells'][n2xy(i)] = xs[0]
+    i = i + 1
+  return game
+
 def contradicts(game):
   return contradictsRows(game) or contradictsCols(game) or contradictsCages(game)
   
