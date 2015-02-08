@@ -5,7 +5,7 @@ from reader import read
 from validator import isSolved
 from simpleSolver import solve
 
-def parseField(input):
+def parseGame(input):
   return dict( { 'cells':      parseCells(input),
                  'cages':      parseCages(input),
                  'dimension':  dimension(input)
@@ -100,7 +100,7 @@ def shiftDo(xs):
   return xs[1:] + [xs[0]]
 
 if __name__ == '__main__':
-  parsed = parseField(read(sys.argv[1]))
+  parsed = parseGame(read(sys.argv[1]))
   pprint(parsed)
   solved = solve(parsed)
   pprint(solved)
