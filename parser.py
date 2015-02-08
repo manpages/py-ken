@@ -17,21 +17,6 @@ def parseCages(input):
   inputList  = input.split('\n\n')
   return parseOperations( parseCagesMap( inputList[0] ),
                                          inputList[1] )
-
-def parseAssertions(acc, input):
-  return parseAssertionsDo(input.split('\n'), acc)
-def parseAssertionsDo(assertions, acc):
-  if len(assertions) == 0:
-    return acc
-  (head, tail) = (assertions[0], assertions[1:])
-  assertionDefinition = head.split(' ')
-  x = assertionDefinition[0]
-  y = assertionDefinition[1]
-  v = assertionDefinition[2]
-  if x != '-':
-    acc[x + ':' + y] = { 'cells': [(int(x), int(y))], 'op': '+', 'targetValue': int(v) }
-  return parseAssertionsDo(tail, acc)
-
 def parseCagesMap(mapBlock):
   mapBlock1 = mapBlock.split('\n')
   mapBlock1.reverse()
